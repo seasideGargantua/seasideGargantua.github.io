@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MeshPack: Towards High-Resolution Artistic Mesh Generation via Part-wise Autoregressive Modeling"/>
+    <title>MeshPack: High-Resolution Artistic Mesh Generation</title>
+    
+    <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <style>
+        :root {
+            /* 配色方案升级：更具现代感和科技活力的撞色 */
+            --primary-color: #ff6b6b;   /* 珊瑚红 */
+            --secondary-color: #4ecdc4; /* 青松石绿 */
+            --accent-color: #ffe66d;    /* 点缀黄 */
+            
+            --bg-color: #f8f9fa;
+            --text-color: #2d3436;
+            --light-gray: #f1f3f5;
+            --dark-gray: #636e72;
+            
+            /* 升级版毛玻璃变量 */
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        
+        body {
+            /* 添加动态背景，增强毛玻璃透视感 */
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 107, 107, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(78, 205, 196, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 230, 109, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* 统一容器样式 - 极简卡片 */
+        .jumbotron, .glass-video-container, .carousel-container, pre {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+        }
+        
+        .jumbotron {
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: visible; /* 允许阴影溢出 */
+            top: 0;
+            animation: fadeInDown 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2, h3, h4 {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        /* 标题渐变增强 */
+        h2 {
+            background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        h3 {
+            color: var(--text-color);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* 标题下划线动画 */
+        h3::after {
+            content: '';
+            display: block;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+            margin: 8px auto 0;
+            transition: width 0.3s ease;
+        }
+        
+        h3:hover::after {
+            width: 100%;
+        }
+        
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+            margin: 2rem 0;
+        }
+        
+        /* 按钮美化 */
+        .btn {
+            border-radius: 50px;
+            padding: 0.8rem 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .btn-light {
+            background: white;
+            color: var(--text-color);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-light::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-light:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-light:hover::before {
+            opacity: 1;
+        }
+
+        .btn-light:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+        
+        /* 图片和视频美化 */
+        .img-fluid, video {
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .img-fluid:hover, .video-item:hover video {
+            transform: scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Abstract 区域 */
+        .text-justify {
+            font-size: 1.05rem;
+            color: var(--dark-gray);
+        }
+        
+        /* Citation 区域 */
+        pre {
+            background: #f8f9fa; /* 实色背景以保证代码可读性 */
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            transition: transform 0.2s ease;
+        }
+        
+        pre:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .copy-button {
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .copy-button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 作者列表样式 */
+        .author-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 4px;
+            position: relative;
+        }
+
+        .author-list a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Video Grid 容器 */
+        .video-grid {
+            gap: 20px;
+        }
+        
+        .video-item {
+            border-radius: 16px;
+            background: transparent;
+            box-shadow: none; /* 移除原来的阴影，由 video 元素承担 */
+            overflow: visible;
+        }
+        
+        .video-item video {
+            width: 100%;
+            border-radius: 16px;
+            display: block;
+        }
+
+        /* --- Carousel 专属优化 --- */
+        .demo-carousel {
+            margin: 4rem auto;
+            padding: 0 5%;
+        }
+
+        .carousel-container {
+            background: rgba(255, 255, 255, 0.6); /* 更透明 */
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 2.5rem;
+        }
+
+        .carousel-video-wrapper {
+            background: #000;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-label {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .fps-badge {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(78, 205, 196, 0.2);
+        }
+
+        /* Reference Images 区域 */
+        .references-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .references-scroll-container {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .reference-image {
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .reference-image:hover {
+            transform: scale(1.05);
+            border-color: var(--secondary-color);
+        }
+
+        /* 导航箭头 */
+        .carousel-nav {
+            background: white;
+            color: var(--text-color);
+            width: 56px;
+            height: 56px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .carousel-nav:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* 指示器 */
+        .carousel-indicator.active {
+            background: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .carousel-indicator.active::after {
+            border-color: var(--primary-color);
+        }
+
+        /* TL;DR Highlight */
+        .tldr-box {
+            background: rgba(78, 205, 196, 0.1);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.5rem 0;
+            color: #2d3436;
+            font-weight: 500;
+        }
+
+        /* 响应式微调 */
+        @media (max-width: 768px) {
+            h2 { font-size: 1.8rem; }
+            .jumbotron { padding: 2rem 1rem; }
+            .btn { width: 100%; margin: 0.5rem 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="jumbotron text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>MeshPack: Towards High-Resolution Artistic Mesh Generation via Part-wise Autoregressive Modeling</h2>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            </div>
+
+                        <div class="author-list">
+                            <a href="https://seasidegargantua.xyz/">Qinglin Yang</a><sup>1,2</sup> &nbsp;&middot;&nbsp;
+                            <a>Xianze Fang</a><sup>2</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://g-1nonly.github.io/">Jingnan Gao</a><sup>2,3</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=g5XimOcAAAAJ&hl=zh-CN">Jiangjing Lyu</a><sup>2</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://daodaofr.github.io/">Yichao Yan</a><sup>3</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://www.xzhou.me/">Xiaowei Zhou</a><sup>1</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://www.xiajiazhi.com/">Jiazhi Xia</a><sup>4</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://pengsida.net/">Sida Peng</a><sup>1</sup>
+                        </div>
+                        
+                        <p style="margin-top: 1rem; color: var(--dark-gray); font-size: 0.95rem;"> 
+                            <sup>1</sup>State Key Lab of CAD & CG, Zhejiang University &nbsp;&nbsp; 
+                            <sup>2</sup>Alibaba Group &nbsp;&nbsp; 
+                            <sup>3</sup>Shanghai Jiao Tong University  &nbsp;&nbsp;
+                            <sup>4</sup>Central South University
+                        </p>
+                        
+                        <div class="row justify-content-center" style="margin-top: 2rem;">
+                            <div class="column">
+                                <a class="btn btn-light" href="" role="button" target="_blank">
+                                    <i class="fas fa-file-pdf" style="margin-right: 8px;"></i> Paper
+                                </a>
+                            </div>
+                            <div class="column">
+                                <a class="btn btn-light" id="code" href="" role="button" target="_blank">
+                                    <i class="fab fa-github" style="margin-right: 8px;"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <img src="files/teaser.png" alt="teaser" class="img-fluid" style="width: 100%; max-width: 1000px;">
+                </div>
+                
+                <div class="col-12 text-center">
+                    <h3>Abstract</h3>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-10 tldr-box text-left">
+                            <span style="color: var(--primary-color); font-weight: 700;">TL;DR:</span> We propose MeshPack, a part-wise autoregressive framework with a part-condition fusion module and FurniSet3D dataset, achieving superior high-resolution furniture mesh generation over existing methods.
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-md-10">
+                            <img class="img-fluid mb-4" src="files/Method.png" alt="MeshPack Overview">
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <b style="color:var(--primary-color); font-size:large" id="demo-warning"></b>
+                            <p class="text-justify" style="margin-top: 1rem;">
+                                This paper addresses the task of generating artistic meshes with high resolution and part-level decomposition. Recent autoregressive methods generate meshes by learning the sequential distribution of mesh vertices and faces, inherently capturing strong mesh priors for high-quality topology. 
+                                However, their scalability is limited by the quadratic complexity of the attention mechanism, which restricts the output resolution. To address this challenge, we introduce <strong>MeshPack</strong>, a part-wise autoregressive modeling approach that decomposes meshes into multiple part-level sequences and iteratively generates each sequence, significantly reducing computational complexity and naturally enhancing the mesh resolution.
+                                In addition, an <em>information passing module</em> is designed to ensure consistency across part-level sequences by fusing previously generated parts with current part, imposing global context awareness during generation.
+                                Furthermore, we introduce <strong>FurniSet3D</strong>, a high-quality furniture dataset with detailed geometry, clean topology, and semantic part decompositions for training our model.
+                                Extensive experiments demonstrate that MeshPack generates fine-resolution meshes with high topological quality and reasonable part decomposition, substantially outperforming existing methods on furniture generation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3>Qualitative Comparison</h3>
+                    <br>
+                    <img src="files/comparison.png" alt="comparison" class="img-fluid" style="border-radius: 8px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3>More Results</h3>
+                    <br>
+                    <img src="files/supp.png" alt="more results" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section mb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <h3 class="text-center w-100">Citation</h3>
+                    <div class="citation-container mt-4">
+                        <button class="copy-button" onclick="copyCitation()" id="copyBtn">
+                            <i class="fas fa-copy"></i>
+                            <span id="copyText">Copy</span>
+                        </button>
+                        <pre id="citationText"><code></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center" style="margin-bottom: 2rem;">
+        <div class="container">
+            <hr>
+            <p style="color: var(--dark-gray);">
+                Thanks to <a href="https://lioryariv.github.io/" target="_blank" style="color: var(--primary-color);">Lior Yariv</a> for the website template.<br>
+                &copy; 2025 <a href="https://github.com/zju3dv" target="_blank" style="color: var(--secondary-color); font-weight: 600;">ZJU3DV</a> Group
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    
+    <script>
+        // Configure MathJax
+        MathJax = {
+            tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]}
+        };
+        
+        // Copy citation function
+        function copyCitation() {
+            const citationText = document.getElementById('citationText').innerText;
+            const copyBtn = document.getElementById('copyBtn');
+            const copyText = document.getElementById('copyText');
+            
+            navigator.clipboard.writeText(citationText).then(() => {
+                copyBtn.classList.add('copied');
+                copyText.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.style.background = '#2ecc71';
+                copyBtn.style.color = 'white';
+                
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyText.innerHTML = 'Copy';
+                    copyBtn.style.background = 'white';
+                    copyBtn.style.color = 'var(--primary-color)';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        
+        // --- Carousel Logic (Kept mostly intact for compatibility) ---
+        let currentSlide = 0;
+        let demoFolders = [];
+        let currentRefIndex = {};
+        let isTransitioning = false;
+        let metadataCache = {};
+        
+        async function loadMetadata(folderName) {
+            if (metadataCache[folderName]) return metadataCache[folderName];
+            try {
+                const response = await fetch(`files/${folderName}/metadata.json`);
+                const metadata = await response.json();
+                metadataCache[folderName] = metadata;
+                return metadata;
+            } catch (error) {
+                console.error(`Failed to load metadata for ${folderName}:`, error);
+                return null;
+            }
+        }
+        
+        async function getDemoFolders() {
+            demoFolders = [
+                '20251006_144437-mode1-4',
+                '20251006_170750-Toy-Pendant-compressed',
+                '20251006_171316-Tissue',
+                '20251006_205246-Electric-fan',
+                '20251006_210835-Box',
+                '20251006_230410-figure-toy',
+                '20251006_230946-toilet-water-bottle'
+            ];
+            
+            if (demoFolders.length > 0) {
+                await loadCarousel();
+            }
+        }
+
+        async function urlExists(url) {
+            try {
+              const res = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+              return res.ok;
+            } catch {
+              return false;
+            }
+        }
+          
+        async function buildReferenceImages(folderName, maxReferenceCount = 10) {
+            const results = await Promise.all(
+              Array.from({ length: maxReferenceCount }, (_, idx) => {
+                const j = idx + 1;
+                const imgNum = String(j).padStart(3, '0');
+                const imgPath = `files/${folderName}/reference_images/reference_${imgNum}.png`;
+                return urlExists(imgPath).then(ok => ({ ok, j, imgPath }));
+              })
+            );
+          
+            const existing = results.filter(r => r.ok);
+            const html = existing.map(({ j, imgPath }) => `
+              <div class="reference-image" data-img-path="${imgPath}">
+                <img src="${imgPath}" alt="Reference ${j}" loading="lazy">
+              </div>
+            `).join('');
+          
+            return { html, count: existing.length };
+        }
+        
+        async function loadCarousel() {
+            const slidesContainer = document.getElementById('carouselSlides');
+            const indicatorsContainer = document.getElementById('carouselIndicators');
+            
+            for (let i = 0; i < demoFolders.length; i++) {
+                const folderName = demoFolders[i];
+                currentRefIndex[folderName] = 0;
+                
+                const metadata = await loadMetadata(folderName);
+                const fps = metadata && metadata.average_inference_fps 
+                    ? metadata.average_inference_fps.toFixed(1) 
+                    : 'N/A';
+                
+                const slide = document.createElement('div');
+                slide.className = `carousel-slide ${i === 0 ? 'active' : ''}`;
+                slide.dataset.folder = folderName;
+                
+                const { html } = await buildReferenceImages(folderName, 10);
+                
+                slide.innerHTML = `
+                    <div class="carousel-content">
+                        <div class="carousel-videos">
+                            <div class="carousel-video-wrapper">
+                                <div class="video-label">Query Video</div>
+                                ${fps !== 'N/A' ? `
+                                <div class="fps-badge">
+                                    <svg class="fps-icon" viewBox="0 0 24 24" fill="none" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span class="fps-value">${fps}</span> FPS (RTX4090)
+                                </div>
+                                ` : ''}
+                                <div class="carousel-video-loading">
+                                    <div class="spinner"></div>
+                                    <span>Loading...</span>
+                                </div>
+                                <video playsinline loop muted preload="metadata">
+                                    <source src="files/${folderName}/query_video_large.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                            <div class="carousel-video-wrapper">
+                                <div class="video-label">Rendered Point Cloud</div>
+                                <div class="carousel-video-loading">
+                                    <div class="spinner"></div>
+                                    <span>Loading...</span>
+                                </div>
+                                <video playsinline loop muted preload="metadata">
+                                    <source src="files/${folderName}/point_cloud_video_large.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                        <div class="carousel-references">
+                            <div class="references-header">
+                                <i class="fas fa-images"></i> Reference Images
+                            </div>
+                            <div class="references-scroll-container">
+                                <button class="ref-nav ref-prev" onclick="changeRefImage('${folderName}', -1)">
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <div class="references-slider" id="refSlider-${folderName}">
+                                    ${html}
+                                </div>
+                                <button class="ref-nav ref-next" onclick="changeRefImage('${folderName}', 1)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                            </div>
+                            <div class="ref-indicators" id="refIndicators-${folderName}"></div>
+                        </div>
+                    </div>
+                `;
+                
+                slidesContainer.appendChild(slide);
+                
+                const indicator = document.createElement('div');
+                indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+                indicator.onclick = () => goToSlide(i);
+                indicatorsContainer.appendChild(indicator);
+                
+                setTimeout(() => initRefIndicators(folderName), 100);
+            }
+            initCarouselVideos();
+        }
+        
+        function initRefIndicators(folderName) {
+            const slider = document.getElementById(`refSlider-${folderName}`);
+            const indicatorsContainer = document.getElementById(`refIndicators-${folderName}`);
+            if (!slider || !indicatorsContainer) return;
+            
+            const images = slider.querySelectorAll('.reference-image');
+            indicatorsContainer.innerHTML = '';
+            
+            images.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.className = `ref-indicator ${index === 0 ? 'active' : ''}`;
+                indicator.onclick = () => goToRefImage(folderName, index);
+                indicatorsContainer.appendChild(indicator);
+            });
+        }
+        
+        function changeRefImage(folderName, direction) {
+            const slider = document.getElementById(`refSlider-${folderName}`);
+            const images = slider.querySelectorAll('.reference-image');
+            const indicators = document.querySelectorAll(`#refIndicators-${folderName} .ref-indicator`);
+            if (images.length === 0) return;
+            
+            indicators[currentRefIndex[folderName]].classList.remove('active');
+            currentRefIndex[folderName] = (currentRefIndex[folderName] + direction + images.length) % images.length;
+            indicators[currentRefIndex[folderName]].classList.add('active');
+            
+            const imageHeight = images[0].offsetHeight + 16;
+            slider.scrollTo({ top: imageHeight * currentRefIndex[folderName], behavior: 'smooth' });
+        }
+        
+        function goToRefImage(folderName, index) {
+            const slider = document.getElementById(`refSlider-${folderName}`);
+            const images = slider.querySelectorAll('.reference-image');
+            const indicators = document.querySelectorAll(`#refIndicators-${folderName} .ref-indicator`);
+            
+            indicators[currentRefIndex[folderName]].classList.remove('active');
+            currentRefIndex[folderName] = index;
+            indicators[currentRefIndex[folderName]].classList.add('active');
+            
+            const imageHeight = images[0].offsetHeight + 16;
+            slider.scrollTo({ top: imageHeight * index, behavior: 'smooth' });
+        }
+        
+        function initCarouselVideos() {
+            const activeSlide = document.querySelector('.carousel-slide.active');
+            if (!activeSlide) return;
+            
+            const videos = activeSlide.querySelectorAll('video');
+            videos.forEach(video => {
+                const wrapper = video.parentElement;
+                const loadingDiv = wrapper.querySelector('.carousel-video-loading');
+                
+                video.addEventListener('loadeddata', function handler() {
+                    if (loadingDiv) loadingDiv.classList.add('hidden');
+                    video.play().catch(e => console.log('Auto-play prevented'));
+                    video.removeEventListener('loadeddata', handler);
+                }, { once: true });
+                
+                video.load();
+            });
+        }
+        
+        function changeSlide(direction) {
+            if (isTransitioning) return;
+            const slides = document.querySelectorAll('.carousel-slide');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            if (slides.length === 0) return;
+            
+            isTransitioning = true;
+            const oldSlide = slides[currentSlide];
+            indicators[currentSlide].classList.remove('active');
+            oldSlide.querySelectorAll('video').forEach(v => v.pause());
+            
+            const newSlideIndex = (currentSlide + direction + slides.length) % slides.length;
+            const newSlide = slides[newSlideIndex];
+            
+            slides.forEach(s => s.classList.remove('slide-out-left', 'slide-out-right', 'slide-in-from-left', 'slide-in-from-right'));
+            
+            if (direction > 0) {
+                oldSlide.classList.remove('active');
+                oldSlide.classList.add('slide-out-left');
+                newSlide.style.display = 'block';
+                newSlide.classList.add('slide-in-from-right');
+            } else {
+                oldSlide.classList.remove('active');
+                oldSlide.classList.add('slide-out-right');
+                newSlide.style.display = 'block';
+                newSlide.classList.add('slide-in-from-left');
+            }
+            
+            currentSlide = newSlideIndex;
+            indicators[currentSlide].classList.add('active');
+            
+            setTimeout(() => {
+                oldSlide.style.display = 'none';
+                oldSlide.classList.remove('slide-out-left', 'slide-out-right');
+                newSlide.classList.remove('slide-in-from-left', 'slide-in-from-right');
+                newSlide.classList.add('active');
+                initCarouselVideos();
+                isTransitioning = false;
+            }, 600);
+        }
+        
+        function goToSlide(index) {
+            if (isTransitioning || index === currentSlide) return;
+            const direction = index > currentSlide ? 1 : -1;
+            changeSlide(direction);
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            else if (e.key === 'ArrowRight') changeSlide(1);
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            getDemoFolders();
+        });
+    </script>
+</body>
+</html>
