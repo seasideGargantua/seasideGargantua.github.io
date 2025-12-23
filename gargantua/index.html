@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Gargantua - Ultimate Visual Fidelity</title>
+    <style>
+        :root {
+            --accent-color: #ffaa00;
+            --glass-bg: rgba(15, 15, 15, 0.8);
+            --border-glow: rgba(255, 170, 0, 0.4);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle at center, #2a2a2a 0%, #000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .widget-frame {
+            position: relative;
+            padding: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(120%);
+            -webkit-backdrop-filter: blur(20px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            box-shadow: 0 50px 120px rgba(0,0,0,0.9), 
+                        inset 0 0 30px rgba(255,255,255,0.05);
+            width: 840px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .widget-frame:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: var(--border-glow);
+            box-shadow: 0 60px 150px rgba(0,0,0,0.8), 
+                        0 0 40px var(--border-glow),
+                        inset 0 0 30px rgba(255,255,255,0.1);
+        }
+
+        .viewport {
+            width: 100%;
+            height: 472.5px; /* 16:9 aspect ratio */
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+        canvas:active { cursor: grabbing; }
+
+        .ui-label {
+            position: absolute;
+            top: 28px;
+            right: 30px;
+            color: var(--accent-color);
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+        }
+
+        .ui-footer {
+            margin-top: 18px;
+            padding: 0 15px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .ui-footer span span {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--accent-color);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget-frame">
+        <div class="viewport" id="viewport">
+            <div id="loading">Initializing Quantum Core...</div>
+            <div class="ui-label">Singularity Engine // Ultimate Fidelity</div>
+            <canvas id="bh-canvas"></canvas>
+        </div>
+        
+        <div class="ui-footer">
+            <span>TARGET: <span>GARGANTUA</span></span>
+            <span>SIMULATION: <span>ACTIVE</span></span>
+            <span>RENDER: <span>RAYMARCHING</span></span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.145.0/build/three.min.js"></script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = vec4(position.xy, 0.0, 1.0);
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        precision highp float;
+        uniform vec2 iResolution;
+        uniform float iTime;
+        uniform vec3 iMouse;
+
+        // --- 高级噪声与纹理生成 ---
+        float hash(float n) { return fract(sin(n) * 43758.5453123); }
+        float noise(vec3 x) {
+            vec3 p = floor(x); vec3 f = fract(x);
+            f = f*f*(3.0-2.0*f);
+            float n = p.x + p.y*57.0 + 113.0*p.z;
+            return mix(mix(mix(hash(n+0.0), hash(n+1.0), f.x), mix(hash(n+57.0), hash(n+58.0), f.x), f.y),
+                       mix(mix(hash(n+113.0), hash(n+114.0), f.x), mix(hash(n+170.0), hash(n+171.0), f.x), f.y), f.z);
+        }
+        
+        // 分形布朗运动 (FBM) - 6层以获得丰富细节
+        float fbm(vec3 p) {
+            float f = 0.0; float w = 0.5; float s = 1.0;
+            for (int i = 0; i < 6; i++) {
+                f += w * noise(p * s); s *= 2.05; w *= 0.48;
+            }
+            return f;
+        }
+
+        // 域扭曲 (Domain Warping) - 制造流体拉丝感的核心
+        float warpedFbm(vec3 p) {
+            vec3 q = vec3(fbm(p + vec3(0.0,0.0,iTime*0.05)),
+                          fbm(p + vec3(5.2,1.3,iTime*0.08)),
+                          fbm(p + vec3(1.9,9.2,iTime*0.12))); 
+            return fbm(p + 4.5*q); // 高强度扭曲
+        }
+
+        // --- ACES 电影级色调映射 ---
+        vec3 aces_tonemap(vec3 color) {
+            mat3 m1 = mat3(0.59719, 0.07600, 0.02840, 0.35458, 0.90834, 0.13383, 0.04823, 0.01566, 0.83777);
+            mat3 m2 = mat3(1.60475, -0.10208, -0.00327, -0.53108, 1.10813, -0.07276, -0.07367, -0.00605, 1.07602);
+            vec3 v = m1 * color;
+            vec3 a = v * (v + 0.0245786) - 0.000090537;
+            vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
+            return m2 * (a / b);
+        }
+
+        void main() {
+            vec2 uv = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
+            
+            // 相机设置
+            vec3 ro = vec3(0.0, 1.5, -iMouse.z); // 初始抬高视角
+            vec3 rd = normalize(vec3(uv, 1.5)); // 广角 FOV
+            
+            // 鼠标旋转
+            float ay = iMouse.x + iTime * 0.02; // 缓慢自转
+            float ax = iMouse.y;
+            mat3 rotX = mat3(1,0,0, 0,cos(ax),-sin(ax), 0,sin(ax),cos(ax));
+            mat3 rotY = mat3(cos(ay),0,sin(ay), 0,1,0, -sin(ay),0,cos(ay));
+            ro = rotY * rotX * ro; rd = rotY * rotX * rd;
+
+            vec3 col = vec3(0.0);
+            vec3 p = ro;
+            float dt = 0.035; // 极小步长以提高精度
+            float accumulatedAlpha = 0.0;
+
+            // --- 高精度光线追踪循环 ---
+            for(int i = 0; i < 300; i++) { // 提升至300次迭代
+                float r2 = dot(p, p);
+                float r = sqrt(r2);
+                if (r < 1.0) { col = vec3(0.0); break; } // 视界
+
+                // 引力透镜力场
+                vec3 force = -1.45 * p / (r2 * r * sqrt(r)); 
+                rd = normalize(rd + force * dt);
+                p += rd * dt;
+
+                // --- 吸积盘渲染 (核心升级) ---
+                float diskThickness = 0.05 + r*0.03 * (1.0 + 0.3*sin(r*5.0 - iTime));
+                if (abs(p.y) < diskThickness && r > 1.25 && r < 5.5) {
+                    float phi = atan(p.z, p.x);
+                    
+                    // 1. 纹理：高频、高对比度的流体拉丝
+                    float noiseVal = warpedFbm(vec3(r * 2.0, phi * 3.5 + iTime*0.3, iTime * 0.07));
+                    noiseVal = pow(noiseVal * 1.2, 4.0); // 极高对比度
+
+                    // 2. 物理效果：多普勒增强与距离衰减
+                    float doppler = dot(normalize(vec3(-p.z, 0.0, p.x)), rd);
+                    float brightness = noiseVal * (1.0 + doppler * 1.5) / (pow(r, 2.2)*0.2 + 0.05);
+                    
+                    // 3. 色彩：基于温度的黑体辐射梯度
+                    vec3 hotColor = vec3(1.0, 0.98, 0.9); // 白热核心
+                    vec3 midColor = vec3(1.0, 0.6, 0.1); // 金橙中圈
+                    vec3 coldColor = vec3(0.5, 0.05, 0.01); // 红褐边缘
+                    
+                    float tempGradient = smoothstep(1.25, 5.5, r);
+                    vec3 diskCol = mix(hotColor, midColor, smoothstep(0.0, 0.25, tempGradient));
+                    diskCol = mix(diskCol, coldColor, smoothstep(0.25, 1.0, tempGradient));
+                    
+                    // 4. 光照累加：使用极高亮度乘数制造过曝辉光
+                    float alpha = smoothstep(diskThickness, diskThickness*0.1, abs(p.y)) * 0.4;
+                    col += diskCol * brightness * 220.0 * alpha * (1.0 - accumulatedAlpha);
+                    accumulatedAlpha += alpha;
+                    
+                    if(accumulatedAlpha > 0.99) break;
+                }
+            }
+
+            // 背景星空
+            if (accumulatedAlpha < 0.95) {
+                float stars = pow(noise(rd * 350.0), 80.0) * 2.5;
+                col += vec3(stars);
+            }
+
+            // 色调映射与伽马校正
+            col = aces_tonemap(col);
+            col = pow(col, vec3(1.0/2.2)); 
+
+            gl_FragColor = vec4(col, 1.0);
+        }
+    </script>
+
+    <script>
+        const canvas = document.getElementById('bh-canvas');
+        const container = document.getElementById('viewport');
+        const loading = document.getElementById('loading');
+
+        let renderer, scene, camera, uniforms;
+
+        function start() {
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas, 
+                antialias: false,
+                powerPreference: "high-performance" 
+            });
+            
+            // 智能设置像素比：保证锐度同时防止过载
+            let pixelRatio = window.devicePixelRatio;
+            pixelRatio = Math.min(pixelRatio, 2.0); // 限制最大为2.0
+            renderer.setPixelRatio(pixelRatio);
+            renderer.setSize(container.clientWidth, container.clientHeight);
+
+            scene = new THREE.Scene();
+            camera = new THREE.Camera();
+
+            uniforms = {
+                iTime: { value: 0 },
+                iResolution: { value: new THREE.Vector2(container.clientWidth * pixelRatio, container.clientHeight * pixelRatio) },
+                iMouse: { value: new THREE.Vector3(0, 0.4, 8.0) }
+            };
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: document.getElementById('vertexShader').textContent,
+                fragmentShader: document.getElementById('fragmentShader').textContent
+            });
+
+            scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+
+            // 隐藏加载动画
+            setTimeout(() => { loading.style.opacity = 0; }, 1000);
+            requestAnimationFrame(animate);
+        }
+
+        let isDragging = false;
+        let lastX, lastY;
+        canvas.onmousedown = (e) => { isDragging = true; lastX = e.clientX; lastY = e.clientY; };
+        window.onmouseup = () => isDragging = false;
+        window.onmousemove = (e) => {
+            if (isDragging) {
+                let dx = e.clientX - lastX;
+                let dy = e.clientY - lastY;
+                uniforms.iMouse.value.x += dx * 0.005;
+                uniforms.iMouse.value.y -= dy * 0.005;
+                uniforms.iMouse.value.y = Math.max(-1.3, Math.min(1.3, uniforms.iMouse.value.y));
+                lastX = e.clientX; lastY = e.clientY;
+            }
+        };
+        container.onwheel = (e) => {
+            e.preventDefault();
+            uniforms.iMouse.value.z = Math.min(Math.max(uniforms.iMouse.value.z + e.deltaY * 0.005, 4.0), 15.0);
+        };
+
+        function animate(time) {
+            uniforms.iTime.value = time * 0.001;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        // 确保 WebGL 上下文丢失时自动恢复
+        canvas.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            loading.innerText = "Context Lost. Restoring...";
+            loading.style.opacity = 1;
+        }, false);
+        canvas.addEventListener('webglcontextrestored', () => {
+            loading.innerText = "Restored.";
+            setTimeout(() => { loading.style.opacity = 0; }, 1000);
+            start();
+        }, false);
+
+        window.onload = start;
+    </script>
+</body>
+</html>
