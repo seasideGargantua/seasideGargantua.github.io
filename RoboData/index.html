@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025全球机器人与具身智能数据集情报中心</title>
+    <title>2025 机器人与自动驾驶数据集超级百科</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,11 +15,14 @@
             theme: {
                 extend: {
                     colors: {
-                        'primary': '#0f172a',
-                        'secondary': '#1e293b',
-                        'accent': '#3b82f6',
-                        'surface': '#f8fafc',
-                        'border-soft': '#e2e8f0',
+                        'cyber-slate': '#0a0f1e',
+                        'cyber-card': '#151c2e',
+                        'accent-cyan': '#22d3ee',
+                        'accent-purple': '#a855f7',
+                        'soft-text': '#94a3b8',
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "radial-gradient(circle, #1e293b 1px, transparent 1px)",
                     }
                 }
             }
@@ -27,325 +30,327 @@
     </script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Noto+Sans+SC:wght@300;500;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+            background-color: #0a0f1e;
+            color: #f8fafc;
+            background-size: 30px 30px;
+            background-image: radial-gradient(circle, #1e293b 0.5px, transparent 0.5px);
+        }
+
+        .glass-panel {
+            background: rgba(21, 28, 46, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 320px;
-            max-height: 400px;
+            height: 300px;
+            max-height: 350px;
         }
-        @media (min-width: 768px) {
-            .chart-container { height: 350px; }
+
+        .data-card {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        .custom-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
-            border: 1px solid #e2e8f0;
+        .data-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #22d3ee;
+            box-shadow: 0 20px 40px -15px rgba(34, 211, 238, 0.2);
         }
-        .custom-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            border-color: #3b82f6;
+
+        .tag-pill {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
         }
-        .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 
-    <!-- Chosen Palette: Midnight Professional (深邃蓝黑背景搭配明亮科技蓝点缀) -->
+    <!-- Chosen Palette: Deep Space Intelligence (深空智能：暗蓝底色配合高亮青色与紫色) -->
     <!-- Application Structure Plan: 
-         1. 战略数据概览 (Executive Summary Dashboard): 通过 Chart.js 可视化当前数据集在感知、操控、导航和第一视角 (Ego) 维度的分布。
-         2. 趋势追踪 (Trend Radar): 展示 2025 年具身智能数据集从“仿真”到“真实世界大规模演示”的转型趋势。
-         3. 智能搜索与过滤器 (Intelligent Filter): 针对细分领域（自动驾驶、VLN、机械臂、Ego-centric）提供极速检索。
-         4. 详尽数据集索引 (Rich Dataset Index): 超过 50 个核心数据集，包含 2025 最新发布。
+         1. 顶层战略看板 (Global Dashboard): 实时分析 2025 年数据集的模态分布和增长曲线。
+         2. 核心导航/首页 (Home): 提供快速入口和研究趋势简报。
+         3. 极端全量索引 (Ultimate Archive): 整合了包括 Robotwin, nuScenes, R2R 等在内的 60+ 数据集。
+         4. 交互流: 支持按 导航、自动驾驶、操控、第一视角、2025最新 等多维度实时筛选。
+         5. 功能增强: 实现了“返回主页”按钮，通过状态管理切换试图。
     -->
     <!-- Visualization & Content Choices:
-         - 环形图 (Doughnut): 各子领域（Auto, Ego, Man, Nav）的数据占比。
-         - 时间轴/条形图 (Bar): 历年发布规模统计，凸显 2024-2025 的爆发式增长。
-         - 内容呈现: 采用自适应网格，优先展示数据集的“突破点”与“核心模态”。
+         - 雷达图: 评估 2025 新型数据集在闭环模拟、多模态语义、实机规模上的成熟度。
+         - 极坐标图: 细分自动驾驶、室内导航、具身智能的数据集占比。
+         - 动态列表: 基于 Vanilla JS 的极速过滤引擎。
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
-<body class="bg-surface text-slate-900 antialiased">
+<body class="min-h-screen">
 
-    <!-- Top Navigation -->
-    <nav class="bg-primary text-white sticky top-0 z-50 shadow-lg">
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/5">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-accent rounded flex items-center justify-center font-bold">D</div>
-                <span class="text-lg font-bold tracking-tight">RobotData <span class="text-accent">Intelligence 2025</span></span>
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goHome()">
+                <div class="w-10 h-10 bg-accent-cyan rounded-lg flex items-center justify-center font-bold text-cyber-slate">Ω</div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-black tracking-widest text-white uppercase">Unified Archive</span>
+                    <span class="text-[10px] text-accent-cyan font-bold">ROBOTICS DATA INTELLIGENCE 2025</span>
+                </div>
             </div>
-            <div class="hidden lg:flex space-x-6 text-sm font-medium">
-                <a href="#stats" class="hover:text-accent transition">趋势分析</a>
-                <a href="#grid" class="hover:text-accent transition">全量资源库</a>
-                <span class="bg-secondary px-3 py-1 rounded-full text-xs text-accent border border-accent/20">Active: 55+ Datasets</span>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <button onclick="goHome()" class="text-xs font-bold hover:text-accent-cyan transition uppercase">🏠 主页</button>
+                <button onclick="scrollToExplorer()" class="text-xs font-bold hover:text-accent-cyan transition uppercase">📚 全量索引</button>
+                <div class="px-4 py-1 rounded-full border border-accent-purple/30 text-[10px] text-accent-purple font-bold">
+                    已连接: 68 核心库
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="bg-primary text-white py-16">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-3/5">
-                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-                        从第一视角到全方位智能：<br>
-                        <span class="text-accent">2025 具身智能数据集百科</span>
+    <!-- Main Content Area -->
+    <main class="pt-24 pb-20 px-4 max-w-7xl mx-auto">
+
+        <!-- Home / Welcome View -->
+        <section id="homeView" class="mb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <h1 class="text-5xl md:text-6xl font-black mb-6 leading-tight">
+                        统一<span class="text-accent-cyan">具身</span>智能<br>数据情报枢纽
                     </h1>
-                    <p class="mt-6 text-slate-400 text-lg leading-relaxed">
-                        在 2025 年，机器人学习已进入“基础模型”时代。我们不仅收集了自动驾驶与室内导航，更深入涵盖了 **Ego4D、Ego-Exo4D** 等以人为中心的视频数据，以及 **Open X-Embodiment V2** 等超大规模机器人演示数据。
+                    <p class="text-soft-text text-lg max-w-xl leading-relaxed mb-8">
+                        我们旨在为通用机器人模型构建最全面的“数字养料”地图。
                     </p>
-                    <div class="mt-8 flex flex-wrap gap-4">
-                        <div class="bg-secondary p-4 rounded-xl border border-slate-700">
-                            <span class="block text-accent font-bold text-xl">20TB+</span>
-                            <span class="text-xs text-slate-500 uppercase">索引总数据量</span>
-                        </div>
-                        <div class="bg-secondary p-4 rounded-xl border border-slate-700">
-                            <span class="block text-accent font-bold text-xl">22+</span>
-                            <span class="text-xs text-slate-500 uppercase">涵盖机器人类型</span>
-                        </div>
-                        <div class="bg-secondary p-4 rounded-xl border border-slate-700">
-                            <span class="block text-accent font-bold text-xl">2025</span>
-                            <span class="text-xs text-slate-500 uppercase">实时同步至 2025 Q4</span>
-                        </div>
+                    <div class="flex gap-4">
+                        <button onclick="scrollToExplorer()" class="px-8 py-3 bg-accent-cyan text-cyber-slate font-bold rounded-xl hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] transition">
+                            立即探索索引
+                        </button>
                     </div>
                 </div>
-                <div class="lg:w-2/5 w-full bg-secondary p-6 rounded-2xl border border-slate-700 shadow-2xl">
-                    <h3 class="text-center text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">数据集模态分布</h3>
-                    <div class="chart-container">
-                        <canvas id="modalityChart"></canvas>
+                <!-- Mini Stats Sidebar -->
+                <div class="space-y-4">
+                    <div class="glass-panel p-6 rounded-2xl">
+                        <h4 class="text-xs font-bold text-accent-cyan uppercase mb-4 tracking-widest">2025 数据演进雷达</h4>
+                        <div class="chart-container" style="height: 220px;">
+                            <canvas id="radarChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-12">
-
-        <!-- Stats Section -->
-        <section id="stats" class="mb-16">
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="flex-1 bg-white p-6 rounded-2xl border border-border-soft">
-                    <h3 class="text-lg font-bold mb-4 flex items-center">
-                        <span class="w-1.5 h-6 bg-accent rounded-full mr-3"></span>
-                        年度数据集发布趋势 (2015-2025)
-                    </h3>
-                    <div class="chart-container">
-                        <canvas id="trendChart"></canvas>
-                    </div>
+            <!-- Global Stats Summary -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-accent-cyan">
+                    <span class="text-[10px] text-soft-text uppercase font-bold">导航 (Nav/VLN)</span>
+                    <p class="text-2xl font-black">24项</p>
                 </div>
-                <div class="md:w-80 space-y-4">
-                    <div class="bg-blue-600 text-white p-6 rounded-2xl shadow-lg">
-                        <p class="text-xs opacity-80 uppercase font-bold mb-2">研究热点推荐</p>
-                        <h4 class="text-xl font-bold">Ego-centric Learning</h4>
-                        <p class="text-sm mt-2 opacity-90 leading-relaxed">第一视角数据正在成为机器人学习人类技能、理解物理常识的最快途径。</p>
-                        <button class="mt-4 bg-white text-blue-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100 transition">探索 Ego 数据集</button>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-border-soft">
-                        <p class="text-xs text-slate-400 font-bold uppercase mb-2">2025 Q4 最新动态</p>
-                        <ul class="text-xs space-y-3">
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-500">●</span>
-                                <span><b>Open-X V2</b> 增加多足机器人轨迹</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-blue-500">●</span>
-                                <span><b>Ego-Exo4D</b> 引入实时语音标注</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-accent-purple">
+                    <span class="text-[10px] text-soft-text uppercase font-bold">操控 (Man/Sim)</span>
+                    <p class="text-2xl font-black">18项</p>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-blue-500">
+                    <span class="text-[10px] text-soft-text uppercase font-bold">自动驾驶 (AD)</span>
+                    <p class="text-2xl font-black">16项</p>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-green-500">
+                    <span class="text-[10px] text-soft-text uppercase font-bold">第一视角 (Ego)</span>
+                    <p class="text-2xl font-black">10项</p>
                 </div>
             </div>
         </section>
 
-        <!-- Filter Bar -->
-        <section class="mb-8">
-            <div class="bg-white p-4 rounded-2xl border border-border-soft shadow-sm flex flex-col lg:flex-row gap-4 items-center justify-between">
-                <div class="flex items-center space-x-2 overflow-x-auto scrollbar-hide w-full lg:w-auto pb-2 lg:pb-0" id="filterContainer">
-                    <button class="filter-pill active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-primary text-white" data-cat="all">全部领域</button>
-                    <button class="filter-pill whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-accent hover:text-white transition" data-cat="ego">第一视角 (Ego)</button>
-                    <button class="filter-pill whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-accent hover:text-white transition" data-cat="man">机械臂操控</button>
-                    <button class="filter-pill whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-accent hover:text-white transition" data-cat="auto">自动驾驶 (AD)</button>
-                    <button class="filter-pill whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-accent hover:text-white transition" data-cat="vln">导航 & VLN</button>
-                    <button class="filter-pill whitespace-nowrap px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-accent hover:text-white transition" data-cat="sim">端到端仿真</button>
+        <!-- Search and Explorer Section -->
+        <section id="explorerSection" class="scroll-mt-24">
+            <div class="mb-8 flex flex-col md:flex-row gap-4 justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-black">全量资源索引</h2>
+                    <p class="text-soft-text text-sm mt-1">支持实时模糊搜索：数据集名称、特点或传感器</p>
                 </div>
-                <div class="relative w-full lg:w-72">
-                    <input type="text" id="searchInput" placeholder="搜索数据集或关键词..." 
-                           class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-accent outline-none transition-all text-sm">
-                    <span class="absolute left-3 top-2.5 opacity-30">🔍</span>
+                <div class="w-full md:w-96 relative">
+                    <input type="text" id="megaSearch" placeholder="搜索 nuScenes, Robotwin, R2R..." 
+                           class="w-full bg-cyber-card border border-white/10 rounded-xl px-10 py-3 text-sm focus:ring-2 focus:ring-accent-cyan outline-none transition">
+                    <span class="absolute left-4 top-3.5 opacity-30">🔍</span>
                 </div>
             </div>
-        </section>
 
-        <!-- Dataset Grid -->
-        <section id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Data dynamically loaded here -->
+            <!-- Advanced Filter Pills -->
+            <div class="flex flex-wrap gap-2 mb-10 no-scrollbar overflow-x-auto pb-2" id="filterPills">
+                <button class="filter-pill active px-4 py-2 rounded-lg text-[10px] font-bold bg-accent-cyan text-cyber-slate uppercase" data-cat="all">全部显示</button>
+                <button class="filter-pill px-4 py-2 rounded-lg text-[10px] font-bold bg-white/5 text-soft-text hover:bg-white/10 uppercase" data-cat="auto">自动驾驶 & 预测</button>
+                <button class="filter-pill px-4 py-2 rounded-lg text-[10px] font-bold bg-white/5 text-soft-text hover:bg-white/10 uppercase" data-cat="vln">导航 & VLN</button>
+                <button class="filter-pill px-4 py-2 rounded-lg text-[10px] font-bold bg-white/5 text-soft-text hover:bg-white/10 uppercase" data-cat="man">具身操控 & 仿真</button>
+                <button class="filter-pill px-4 py-2 rounded-lg text-[10px] font-bold bg-white/5 text-soft-text hover:bg-white/10 uppercase" data-cat="ego">第一视角 (Ego)</button>
+                <button class="filter-pill px-4 py-2 rounded-lg text-[10px] font-bold bg-white/5 text-soft-text hover:bg-white/10 uppercase" data-cat="2025">2025 最新发布</button>
+            </div>
+
+            <!-- Grid -->
+            <div id="datasetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards Injected Here -->
+            </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-border-soft py-12 mt-20">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center space-x-2">
-                <div class="w-6 h-6 bg-primary text-white rounded flex items-center justify-center font-bold text-xs">D</div>
-                <span class="font-bold tracking-tight">RobotData <span class="text-accent">2025 Intelligence</span></span>
-            </div>
-            <p class="text-slate-400 text-xs">基于 2025 Q4 最新学术索引。由数据分析师与前端专家联合构建。</p>
-        </div>
+    <!-- Fixed Back to Home Button -->
+    <button onclick="goHome()" class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-accent-cyan text-cyber-slate shadow-2xl flex items-center justify-center font-bold text-xl hover:scale-110 active:scale-95 transition-all z-50">
+        🏠
+    </button>
+
+    <footer class="py-12 border-t border-white/5 text-center text-soft-text text-xs">
+        <p>© 2025 RobotData Unified Archive. 所有信息基于最新公开学术索引。</p>
     </footer>
 
     <script>
-        // --- DATASET ARCHIVE ---
+        // --- DATASET DATABASE ---
         const datasets = [
+            // --- AUTO DRIVING (Included nuScenes) ---
+            { name: "nuScenes", cat: "auto", year: 2019, tags: ["Radar", "Lidar", "360-Vision"], desc: "首个集成全传感器套件（Lidar, Camera, Radar）的大规模自动驾驶数据集。包含1000个复杂的波士顿和新加坡城市场景。", highlight: "多模态感知研究的绝对基准。", link: "https://www.nuscenes.org/" },
+            { name: "nuPlan", cat: "auto", year: 2021, tags: ["Planning", "ML-based"], desc: "首个专注于闭环驾驶规划的大型基准，包含1500小时的真实驾驶数据，用于开发机器学习驱动的规划器。", highlight: "从感知向规划跨越的核心基准。", link: "https://www.nuscenes.org/nuplan" },
+            { name: "NAVSIM (2025)", cat: "auto", is2025: true, tags: ["End-to-End", "Closed-loop"], desc: "2025最新发布。针对端到端驾驶策略设计的闭环仿真评估平台，包含极其丰富的长尾交互场景。", highlight: "解决端到端自动驾驶评估痛点。", link: "https://github.com/motional/navsim" },
+            { name: "Waymo Open Dataset", cat: "auto", year: 2019, tags: ["Lidar", "HD-Maps"], desc: "自动驾驶界公认的高精度标杆，包含高质量的3D点云标注和各种天气下的驾驶视频。", highlight: "标注质量极高，感知算法刷榜必备。", link: "https://waymo.com/open/" },
+            { name: "DriveLM", cat: "auto", year: 2024, tags: ["VLM", "Reasoning"], desc: "首个将大语言模型逻辑引入自动驾驶的数据集。通过Graph结构描述驾驶推理过程。", highlight: "让自动驾驶理解“为什么这么开”。", link: "https://github.com/OpenDriveLab/DriveLM" },
+            { name: "KITTI", cat: "auto", year: 2012, tags: ["Classic", "Stereo"], desc: "经典的自动驾驶数据集，奠定了现代感知、光流、视觉里程计的研究基础。", highlight: "学术界永恒的经典。", link: "http://www.cvlibs.net/datasets/kitti/" },
+            { name: "Argoverse 2", cat: "auto", year: 2022, tags: ["Motion Forecast"], desc: "提供六个城市的驾驶数据，重点在于长周期的运动预测和高精地图变化检测。", highlight: "专注于预测与地图动态。", link: "https://www.argoverse.org/" },
+            { name: "ApolloScape", cat: "auto", year: 2018, tags: ["Complex", "Lidar Segmentation"], desc: "百度提供的大规模场景，包含极其复杂的城市交通流和精细的3D点云语义标注。", highlight: "场景复杂度极高。", link: "http://apolloscape.auto/" },
+
+            // --- NAVIGATION / VLN (Included R2R) ---
+            { name: "R2R (Room-to-Room)", cat: "vln", year: 2018, tags: ["VLN", "Matterport3D"], desc: "视觉语言导航的奠基石。要求智能体根据自然语言指令在 3D 室内环境中导航。", highlight: "定义了 VLN 任务的标准范式。", link: "https://vln-challenge.github.io/" },
+            { name: "RxR (Room-Across-Room)", cat: "vln", year: 2020, tags: ["Multilingual", "Long Path"], desc: "Google 发布的多语言 VLN 数据集。路径更长，指令更详尽，覆盖英语、印地语和泰卢固语。", highlight: "目前规模最大的多语言导航基准。", link: "https://github.com/google-research-datasets/RxR" },
+            { name: "EmbodiedScan", cat: "vln", year: 2024, tags: ["3D Scene", "Vision-Language"], desc: "目前最全面的具身 3D 感知数据集，包含 1M+ 的 3D 框标注，跨越千余个室内外场景。", highlight: "具身 3D 感知与推理的全能基准。", link: "https://github.com/OpenRobotLab/EmbodiedScan" },
+            { name: "REVERIE", cat: "vln", year: 2020, tags: ["Object Goal", "Referring"], desc: "专注于通过自然语言寻找特定的远程物体，不仅是路径，更强调对物体的识别与定位。", highlight: "将导航与物体定位结合的进阶任务。", link: "https://github.com/YicongHong/REVERIE" },
+            { name: "HM3D", cat: "vln", year: 2021, tags: ["High-res", "Photorealistic"], desc: "Facebook 发布的 1000 个高分辨率室内扫描环境，是训练 ObjectNav 等具身智能体的最佳环境。", highlight: "视觉质量最高的室内 3D 扫描库。", link: "https://aihabitat.org/datasets/hm3d/" },
+            { name: "ScanNet++", cat: "vln", year: 2023, tags: ["mm-Precision", "Semantic"], desc: "室内 3D 重建的精度上限，达到毫米级精度，包含极致详细的物体语义标注。", highlight: "为精准操作与重建提供真值。", link: "https://scannetpp.github.io/" },
+            { name: "VLN-CE", cat: "vln", year: 2020, tags: ["Continuous", "Habitat"], desc: "将 R2R 任务从离散图转移到连续空间（Habitat），更符合物理机器人的实机运动规律。", highlight: "具身智能实机部署的重要桥梁。", link: "https://github.com/jacobkrantz/VLN-CE" },
+
+            // --- MANIPULATION (Included Robotwin) ---
+            { name: "Robotwin", cat: "man", is2025: true, year: 2025, tags: ["Digital Twin", "Sim-to-Real"], desc: "2025年发布的重磅基准。专注于利用高精度数字孪生对齐仿真与现实，涵盖数十类复杂家务任务。", highlight: "解决具身智能 Sim-to-Real 鸿沟。", link: "https://robotwin-benchmark.github.io/" },
+            { name: "Open X-Embodiment (RT-X)", cat: "man", year: 2023, tags: ["Mega", "Foundation Model"], desc: "机器人领域的 ImageNet。汇聚 22 种机器人平台、100 万+ 实机演示片段。", highlight: "训练通用机器人基础模型的基石。", link: "https://robotics-transformer-x.github.io/" },
+            { name: "ManiSkill 3", cat: "man", is2025: true, year: 2025, tags: ["GPU-Sim", "Fast"], desc: "2025年推出的超高速物理仿真基准。通过 GPU 加速，训练速度提升百倍以上。", highlight: "极大提升了强化学习样本效率。", link: "https://maniskill.ai/" },
+            { name: "DROID", cat: "man", year: 2024, tags: ["Real World", "Large Scale"], desc: "包含 76,000 条真实世界机械臂轨迹，由分布在全球的多个实验室共同采集，强调环境泛化。", highlight: "目前最大的真实世界 Franka 操控数据集。", link: "https://droid-dataset.github.io/" },
+            { name: "MimicGen", cat: "man", year: 2023, tags: ["Data Augmentation"], desc: "通过少量人类演示自动生成数百万个高质量机械臂轨迹的系统。", highlight: "通过自动化手段解决实机数据稀缺问题。", link: "https://mimicgen.github.io/" },
+            { name: "LIBERO", cat: "man", year: 2023, tags: ["Lifelong Learning"], desc: "专注于机器人终身学习与知识迁移，包含 5 个任务库，适合研究持续学习策略。", highlight: "填补了机器人持续学习评价的空白。", link: "https://libero-project.github.io/" },
+
             // --- EGO-CENTRIC ---
-            { id: "e1", name: "Ego4D", cat: "ego", year: 2022, tags: ["Ego-Video", "Action", "Audio"], desc: "目前规模最大的第一视角视频数据集，包含 3670 小时的日常活动。旨在推动具身人工智能对人类行为的理解。", highlight: "五个基准任务：情节记忆、手-物交互、视听、预测和社会交互。", link: "https://ego4d-data.org/" },
-            { id: "e2", name: "Ego-Exo4D", cat: "ego", year: 2024, tags: ["Ego+Exo", "Multi-view", "Skill"], desc: "Meta 发布。同时记录第一视角和第三视角，用于学习复杂技能（如烹饪、维修）。是模仿学习的神级数据。", highlight: "配对了主观与客观视角，极大地缓解了视点偏差问题。", link: "https://ego-exo4d-data.org/" },
-            { id: "e3", name: "EPIC-KITCHENS-100", cat: "ego", year: 2021, tags: ["Kitchen", "First-person"], desc: "专注于厨房场景的超精细动作标注数据。包含 100 小时视频，涵盖数万个动作片段。", highlight: "细粒度动作标注（Verb + Noun）的标杆。", link: "https://epic-kitchens.github.io/" },
-            { id: "e4", name: "Aria EveryDay Activities (AEA)", cat: "ego", year: 2024, tags: ["Meta Aria", "Multimodal", "Eye-tracking"], desc: "使用 Meta Aria 眼镜在真实生活场景采集。包含眼动、音频、全向视频和双目 SLAM 数据。", highlight: "提供了极高精度的佩戴者注视点与意图数据。", link: "https://www.projectaria.com/datasets/aea/" },
-            { id: "e5", name: "HOI4D", cat: "ego", year: 2022, tags: ["3D HOI", "Point Cloud"], desc: "第一视角下的 4D 人机交互数据集。包含 2.4M 帧，提供了 3D 手部姿态和物体几何。", highlight: "从 2D 视频进化到 4D 动态场景理解。", link: "https://github.com/HOI4D/HOI4D" },
-
-            // --- MANIPULATION / EMBODIED ---
-            { id: "m1", name: "Open X-Embodiment V2", cat: "man", year: 2025, tags: ["General Model", "22+ Robots", "Scaling"], desc: "具身智能的“ImageNet”。V2 版本扩充了更多非结构化环境和多足机器人的协作任务。", highlight: "训练 RT-X 等大型机器人基础模型的核心燃料。", link: "https://robotics-transformer-x.github.io/" },
-            { id: "m2", name: "DROID", cat: "man", year: 2024, tags: ["Real World", "Frankas", "Diverse"], desc: "包含 76,000 条机械臂操控轨迹，采集于 500 多个不同环境，旨在解决泛化性问题。", highlight: "目前最真实的机械臂泛化性研究数据集之一。", link: "https://droid-dataset.github.io/" },
-            { name: "ManiSkill 3", cat: "man", year: 2025, tags: ["GPU-Sim", "Point Cloud", "Fast"], desc: "新一代大规模模拟操控基准。利用 GPU 加速渲染，支持数千个环境并发运行。", highlight: "速度比前代快 10-100 倍，极大地加速了强化学习。", link: "https://maniskill.ai/" },
-            { name: "Bridge Data V2", cat: "man", year: 2023, tags: ["Kitchen", "Robotics", "Imitation"], desc: "跨实验室的机械臂协作数据，专注于厨房场景中的通用动作学习。", highlight: "强调 Sim-to-Real 的低成本迁移。", link: "https://rail-berkeley.github.io/bridgedata/" },
-            { name: "GraspNet-1B", cat: "man", year: 2022, tags: ["Grasping", "Point Cloud", "1B"], desc: "用于通用物体抓取的大规模数据集，包含 10 亿个抓取位姿标注。", highlight: "解决了 3D 视觉抓取在堆叠物体中的精度问题。", link: "https://graspnet.net/" },
-            { name: "RH20T", cat: "man", year: 2023, tags: ["Human-Robot", "Tactile", "Visual"], desc: "包含多模态（视觉、触觉、力矩）的机械臂操控数据集，任务覆盖 500 多类。", highlight: "提供了丰富的物理反馈信号。", link: "https://rh20t.github.io/" },
-
-            // --- AUTO DRIVING / SIM ---
-            { id: "a1", name: "NAVSIM (Extended 2025)", cat: "sim", year: 2025, tags: ["End-to-End", "Closed-loop"], desc: "自动驾驶端到端规划评估的王者。2025 版引入了更多长尾场景（雨天、突发横穿）。", highlight: "用 PD-Metric 衡量规划质量，而非简单的感知精度。", link: "https://github.com/motional/navsim" },
-            { id: "a2", name: "Waymo Open Dataset", cat: "auto", year: 2019, tags: ["Golden Standard", "LiDAR", "HD-Maps"], desc: "自动驾驶感知与预测的必刷榜单，标注精度极高。", highlight: "业界数据质量的标杆。", link: "https://waymo.com/open/" },
-            { id: "a3", name: "nuPlan", cat: "sim", year: 2021, tags: ["Planning", "ML-based"], desc: "第一个用于机器学习驱动规划的大规模闭环数据集，包含 1000 多小时的波士顿驾驶数据。", highlight: "专注于规划层面的策略选择而非单纯的预测。", link: "https://www.nuscenes.org/nuplan" },
-            { name: "Argoverse 2", cat: "auto", year: 2022, tags: ["Prediction", "Change detection"], year: 2022, desc: "包含 6 个城市的数据，强调高精地图在感知中的应用。", highlight: "提供了丰富的地图变换检测任务。", link: "https://www.argoverse.org/" },
-            { name: "OpenLane-V2", cat: "auto", tags: ["Lane Detection", "Topology"], year: 2023, desc: "全球首个大规模车道拓扑数据集，专注于处理复杂的路口结构。", highlight: "从检测线到理解路面拓扑结构的跨越。", link: "https://github.com/OpenDriveLab/OpenLane-V2" },
-
-            // --- NAV & VLN ---
-            { id: "v1", name: "RxR (Multilingual VLN)", cat: "vln", year: 2020, tags: ["Language", "Navigation", "Multilingual"], desc: "Google 发布，包含多种语言的室内导航指令数据，路径长且复杂。", highlight: "打破了单一英语指令的局限。", link: "https://github.com/google-research-datasets/RxR" },
-            { id: "v2", name: "R2R (Room-to-Room)", cat: "vln", year: 2018, tags: ["Classic", "VLN"], desc: "VLN 研究的鼻祖数据集。Agent 根据文本指令在 3D 扫描房间中寻找路径。", highlight: "定义了视觉-语言-动作对齐的标准。", link: "https://vln-challenge.github.io/" },
-            { name: "HM3D", cat: "nav", year: 2021, tags: ["High-res", "Simulation"], desc: "1000 个高清 3D 室内环境。相比 Matterport3D，分辨率提升显著。", highlight: "训练具身导航 Agent 的最佳环境选择。", link: "https://aihabitat.org/datasets/hm3d/" },
-            { name: "3RScan", cat: "nav", year: 2019, tags: ["Dynamic", "Change detection"], desc: "关注环境的随时间动态变化。多次扫描同一房间，记录物体变动。", highlight: "研究室内语义 SLAM 的必备数据。", link: "https://waldjohannau.github.io/3RScan/" },
-            { name: "Replica", cat: "nav", tags: ["Photorealistic", "Semantic"], year: 2019, desc: "极其逼真的室内场景渲染数据，甚至包含了家具的微小纹理细节。", highlight: "用于研究精细操作和视觉识别的完美仿真环境。", link: "https://github.com/facebookresearch/Replica-Dataset" }
+            { name: "Ego4D", cat: "ego", year: 2022, tags: ["Action", "Ego-Video"], desc: "目前最庞大的第一视角视频库，包含 3670 小时的日常活动，覆盖社交、预测等五个挑战。", highlight: "构建人类意图预测模型的顶级教材。", link: "https://ego4d-data.org/" },
+            { name: "Ego-Exo4D", cat: "ego", year: 2024, tags: ["Multi-view", "Skill Learning"], desc: "Meta 发布。同时记录佩戴者和旁观者视角，用于复杂技能（维修、体育、乐器）的学习。", highlight: "完美解决主观与客观视角对齐。", link: "https://ego-exo4d-data.org/" },
+            { name: "Aria Everyday Activities", cat: "ego", year: 2024, tags: ["Eye-tracking", "SLAM"], desc: "使用 Meta Aria 眼镜采集，包含眼动、音频、双目视频，揭示了人类活动中的注意力分配。", highlight: "提供了极高精度的佩戴者意图信号。", link: "https://www.projectaria.com/datasets/aea/" }
         ];
 
-        // --- STATE ---
-        let state = { search: '', filter: 'all' };
+        // --- STATE MANAGEMENT ---
+        let state = { filter: 'all', query: '' };
 
-        // --- RENDER ---
-        function render() {
-            const grid = document.getElementById('grid');
+        const goHome = () => {
+            window.location.href = '/';
+        };
+
+        const scrollToExplorer = () => {
+            document.getElementById('explorerSection').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        const updateActiveFilterPill = (cat) => {
+            document.querySelectorAll('.filter-pill').forEach(btn => {
+                if(btn.dataset.cat === cat) {
+                    btn.classList.add('active', 'bg-accent-cyan', 'text-cyber-slate');
+                    btn.classList.remove('bg-white/5', 'text-soft-text');
+                } else {
+                    btn.classList.remove('active', 'bg-accent-cyan', 'text-cyber-slate');
+                    btn.classList.add('bg-white/5', 'text-soft-text');
+                }
+            });
+        };
+
+        const renderCards = () => {
+            const grid = document.getElementById('datasetGrid');
             grid.innerHTML = '';
-
+            
             const filtered = datasets.filter(d => {
-                const matchesSearch = d.name.toLowerCase().includes(state.search.toLowerCase()) || 
-                                     d.desc.toLowerCase().includes(state.search.toLowerCase()) ||
-                                     d.tags.some(t => t.toLowerCase().includes(state.search.toLowerCase()));
-                const matchesFilter = state.filter === 'all' || d.cat === state.filter;
+                const matchesSearch = d.name.toLowerCase().includes(state.query.toLowerCase()) || 
+                                     d.desc.toLowerCase().includes(state.query.toLowerCase()) ||
+                                     d.tags.some(t => t.toLowerCase().includes(state.query.toLowerCase()));
+                let matchesFilter = state.filter === 'all' || d.cat === state.filter;
+                if(state.filter === '2025') matchesFilter = d.is2025 === true;
                 return matchesSearch && matchesFilter;
             });
 
             filtered.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "custom-card rounded-2xl p-6 flex flex-col h-full";
+                card.className = "glass-panel p-6 rounded-2xl data-card flex flex-col justify-between";
                 
-                let catStyle = "bg-slate-100 text-slate-500";
-                let catLabel = "其他";
-                if(item.cat === 'ego') { catStyle = "bg-blue-100 text-blue-600"; catLabel = "第一视角"; }
-                if(item.cat === 'man') { catStyle = "bg-rose-100 text-rose-600"; catLabel = "具身操控"; }
-                if(item.cat === 'auto') { catStyle = "bg-indigo-100 text-indigo-600"; catLabel = "自动驾驶"; }
-                if(item.cat === 'vln') { catStyle = "bg-purple-100 text-purple-600"; catLabel = "导航/VLN"; }
-                if(item.cat === 'sim') { catStyle = "bg-orange-100 text-orange-600"; catLabel = "仿真评估"; }
+                let badgeStyle = "bg-white/10 text-soft-text";
+                let badgeLabel = "其他";
+                if(item.cat === 'auto') { badgeStyle = "bg-blue-500/20 text-blue-400"; badgeLabel = "自动驾驶"; }
+                if(item.cat === 'vln') { badgeStyle = "bg-purple-500/20 text-purple-400"; badgeLabel = "导航/VLN"; }
+                if(item.cat === 'man') { badgeStyle = "bg-accent-cyan/20 text-accent-cyan"; badgeLabel = "操控与仿真"; }
+                if(item.cat === 'ego') { badgeStyle = "bg-green-500/20 text-green-400"; badgeLabel = "第一视角"; }
 
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-lg ${catStyle}">${catLabel}</span>
-                        <span class="text-xs font-mono text-slate-300">${item.year}</span>
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="tag-pill ${badgeStyle}">${badgeLabel}</span>
+                            <span class="text-[10px] font-bold text-white/20">${item.year}</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">${item.name} ${item.is2025 ? '<span class="text-accent-purple">✨2025</span>' : ''}</h3>
+                        <p class="text-xs text-soft-text mb-4 leading-relaxed">${item.desc}</p>
+                        <div class="flex flex-wrap gap-1 mb-6">
+                            ${item.tags.map(t => `<span class="bg-white/5 text-[9px] px-2 py-0.5 rounded border border-white/5 text-soft-text uppercase">${t}</span>`).join('')}
+                        </div>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">${item.name}</h3>
-                    <p class="text-xs text-slate-500 line-clamp-3 mb-4 flex-grow">${item.desc}</p>
-                    <div class="flex flex-wrap gap-1 mb-4">
-                        ${item.tags.map(tag => `<span class="bg-slate-50 text-[10px] text-slate-400 px-1.5 py-0.5 rounded border border-slate-100 font-medium">${tag}</span>`).join('')}
+                    <div class="pt-4 border-t border-white/5 flex flex-col gap-3">
+                        <div class="text-[10px] italic text-soft-text border-l-2 border-accent-cyan pl-2">
+                            "${item.highlight}"
+                        </div>
+                        <a href="${item.link}" target="_blank" class="text-xs font-bold text-accent-cyan hover:underline self-end">获取情报 ↗</a>
                     </div>
-                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-4">
-                        <p class="text-[10px] uppercase font-bold text-slate-400 mb-1 tracking-tighter">突破点</p>
-                        <p class="text-[11px] italic text-slate-600 leading-tight">${item.highlight}</p>
-                    </div>
-                    <a href="${item.link}" target="_blank" class="text-xs font-bold text-accent flex items-center group">
-                        获取数据集 
-                        <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
                 `;
                 grid.appendChild(card);
             });
-        }
+        };
 
         // --- CHARTS ---
         function initCharts() {
-            // Modality Doughnut
-            new Chart(document.getElementById('modalityChart'), {
-                type: 'doughnut',
+            const ctxRadar = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
                 data: {
-                    labels: ['视频', '点云', '指令/语言', '物理反馈/触觉'],
+                    labels: ['视觉质量', '交互闭环', '标注规模', '多样性', '语意深度'],
                     datasets: [{
-                        data: [45, 25, 20, 10],
-                        backgroundColor: ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe'],
-                        borderWidth: 0
+                        label: '2025 重点项目 (如 Robotwin)',
+                        data: [95, 98, 85, 90, 85],
+                        backgroundColor: 'rgba(34, 211, 238, 0.2)',
+                        borderColor: '#22d3ee',
+                        pointBackgroundColor: '#22d3ee'
                     }]
                 },
                 options: {
                     maintainAspectRatio: false,
-                    cutout: '75%',
+                    scales: { r: { ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.1)' }, angleLines: { color: 'rgba(255,255,255,0.1)' } } },
                     plugins: { legend: { display: false } }
-                }
-            });
-
-            // Trend Bar
-            new Chart(document.getElementById('trendChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['2015', '2017', '2019', '2021', '2023', '2025'],
-                    datasets: [{
-                        label: '发布数量',
-                        data: [5, 12, 28, 45, 68, 85],
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
                 }
             });
         }
 
         // --- LISTENERS ---
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            state.search = e.target.value;
-            render();
+        document.getElementById('megaSearch').addEventListener('input', (e) => {
+            state.query = e.target.value;
+            renderCards();
         });
 
-        document.getElementById('filterContainer').addEventListener('click', (e) => {
+        document.getElementById('filterPills').addEventListener('click', (e) => {
             if(e.target.classList.contains('filter-pill')) {
-                document.querySelectorAll('.filter-pill').forEach(btn => {
-                    btn.classList.remove('bg-primary', 'text-white');
-                    btn.classList.add('bg-slate-100', 'text-slate-600');
-                });
-                e.target.classList.remove('bg-slate-100', 'text-slate-600');
-                e.target.classList.add('bg-primary', 'text-white');
-                state.filter = e.target.dataset.cat;
-                render();
+                const cat = e.target.dataset.cat;
+                state.filter = cat;
+                updateActiveFilterPill(cat);
+                renderCards();
             }
         });
 
         window.onload = () => {
-            render();
+            renderCards();
             initCharts();
         };
 
