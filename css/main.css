@@ -1332,7 +1332,7 @@ span.highlight {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #f9ff0e;
+  background: #692a87;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
