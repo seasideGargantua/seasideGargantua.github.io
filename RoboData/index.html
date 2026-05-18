@@ -107,7 +107,7 @@
                 <button onclick="goHome()" class="text-xs font-bold hover:text-accent-cyan transition uppercase">🏠 主页</button>
                 <button onclick="scrollToExplorer()" class="text-xs font-bold hover:text-accent-cyan transition uppercase">📚 全量索引</button>
                 <div class="px-4 py-1 rounded-full border border-accent-purple/30 text-[10px] text-accent-purple font-bold">
-                    已连接: 68 核心库
+                    已连接: 79 核心库
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
                 <div class="glass-panel p-4 rounded-xl border-l-4 border-accent-cyan">
                     <span class="text-[10px] text-soft-text uppercase font-bold">导航 (Nav/VLN)</span>
-                    <p class="text-2xl font-black">24项</p>
+                    <p class="text-2xl font-black">35项</p>
                 </div>
                 <div class="glass-panel p-4 rounded-xl border-l-4 border-accent-purple">
                     <span class="text-[10px] text-soft-text uppercase font-bold">操控 (Man/Sim)</span>
@@ -226,6 +226,106 @@
             { name: "HM3D", cat: "vln", year: 2021, tags: ["High-res", "Photorealistic"], desc: "Facebook 发布的 1000 个高分辨率室内扫描环境，是训练 ObjectNav 等具身智能体的最佳环境。", highlight: "视觉质量最高的室内 3D 扫描库。", link: "https://aihabitat.org/datasets/hm3d/" },
             { name: "ScanNet++", cat: "vln", year: 2023, tags: ["mm-Precision", "Semantic"], desc: "室内 3D 重建的精度上限，达到毫米级精度，包含极致详细的物体语义标注。", highlight: "为精准操作与重建提供真值。", link: "https://scannetpp.github.io/" },
             { name: "VLN-CE", cat: "vln", year: 2020, tags: ["Continuous", "Habitat"], desc: "将 R2R 任务从离散图转移到连续空间（Habitat），更符合物理机器人的实机运动规律。", highlight: "具身智能实机部署的重要桥梁。", link: "https://github.com/jacobkrantz/VLN-CE" },
+            { name: "InternData-N1", cat: "vln", year: 2025, tags: ["Continuous", "Habitat"], desc: "通过统一的 LeRobot 格式整合了 VLN-CE、VLN-PE 及自建的 VLN-N1 等主流基准，包含超过 83 万条高精度导航轨迹。", highlight: "极高的场景多样性与本体适配性。", link: "https://huggingface.co/datasets/InternRobotics/InternData-N1" },
+            { 
+                name: "GoStanford", 
+                cat: "vln", 
+                year: 2018, 
+                tags: ["Teleoperated", "Trajectory", "Real-World"], 
+                desc: "早期真实世界导航数据集，包含27个场景，总里程25.5km，提供16.7小时的遥控操作轨迹数据及178K图像。", 
+                highlight: "早期的真实世界机器人遥控采集基准。", 
+                link: "https://github.com/hirose-n/GoStanford" 
+            },
+            { 
+                name: "RECON", 
+                cat: "vln", 
+                year: 2021, 
+                tags: ["Autonomous", "Trajectory", "Real-World"], 
+                desc: "自主采集的真实世界数据集，涵盖152.5km里程和40小时的视觉数据，包含610K张图像。", 
+                highlight: "较大规模的自主探索轨迹数据集。", 
+                link: "https://sites.google.com/berkeley.edu/recon" 
+            },
+            { 
+                name: "SCAND", 
+                cat: "vln", 
+                year: 2022, 
+                tags: ["Teleoperated", "Trajectory", "Crowded-Space"], 
+                desc: "侧重于校园内拥挤环境的导航，包含40km里程和100K图像，由遥控采集完成。", 
+                highlight: "专注于社交导航（Social Navigation）的真实场景数据集。", 
+                link: "https://cs.utexas.edu/~scand" 
+            },
+            { 
+                name: "SACSon", 
+                cat: "vln", 
+                year: 2023, 
+                tags: ["Autonomous", "Trajectory", "Long-term"], 
+                desc: "提供75小时的长时自主导航数据，包含5个场景及241K图像。", 
+                highlight: "强调自主采集的鲁棒性和长时运行能力。", 
+                link: "https://github.com/hirose-n/SACSon" 
+            },
+            { 
+                name: "Youtube-HT", 
+                cat: "vln", 
+                year: 2020, 
+                tags: ["Internet-Video", "Trajectory", "Zero-shot"], 
+                desc: "从YouTube抓取的1387个场景视频，包含119小时和550K图像，用于学习通用的视觉导航特征。", 
+                highlight: "利用海量互联网视频作为导航学习的监督信号。", 
+                link: "https://github.com/Cyang-Kevin/YouTube-HT" 
+            },
+            { 
+                name: "Youtube-VLN", 
+                cat: "vln", 
+                year: 2023, 
+                tags: ["Instruction-following", "VLN", "Internet"], 
+                desc: "包含4078个场景和14K条文本指令，图像量达587K，是互联网视频驱动的视觉语言导航数据集。", 
+                highlight: "场景丰富度极高，结合了自然语言指令。", 
+                link: "https://github.com/YicongLin/Youtube-VLN" 
+            },
+            { 
+                name: "AMR", 
+                cat: "vln", 
+                year: 2025, 
+                tags: ["Autonomous", "Trajectory", "Massive-Scale"], 
+                desc: "仿真环境下的大规模数据集，包含7.5M图像，专注于轨迹自主学习。", 
+                highlight: "2025年的最新大规模仿真工作，提供极高的图像采样量。", 
+                link: "https://github.com/Meng-Ai/AMR" 
+            },
+            { 
+                name: "REVERIE", 
+                cat: "vln", 
+                year: 2020, 
+                tags: ["Discrete", "Object-Grounded", "Instruction"], 
+                desc: "包含21.7K条指令和10.6K图像，侧重于根据文本寻找特定物体（Remote Embodied Visual Referencing）。", 
+                highlight: "将视觉语言导航（VLN）与物体指代结合的代表作。", 
+                link: "https://github.com/panyijia/REVERIE" 
+            },
+            { 
+                name: "R2R-CE", 
+                cat: "vln", 
+                year: 2022, 
+                tags: ["Continuous-Environment", "Discrete-Action", "Instruction"], 
+                desc: "在连续环境中对Room-to-Room数据集的扩展，包含10.8K指令及647K图像。", 
+                highlight: "从离散图导航向连续物理空间迁移的关键基准。", 
+                link: "https://github.com/YicongLin/R2R-CE" 
+            },
+            { 
+                name: "ScaleVLN", 
+                cat: "vln", 
+                year: 2023, 
+                tags: ["Massive-Instruction", "Discrete", "VLN"], 
+                desc: "拥有4.9M条超大规模文本指令的仿真导航集，涵盖800个场景。", 
+                highlight: "指令规模最大的视觉语言导航仿真集之一。", 
+                link: "https://github.com/YicongLin/ScaleVLN" 
+            },
+            { 
+                name: "InternData-N1", 
+                cat: "vln", 
+                year: 2025, 
+                tags: ["Trajectory+Joint", "Foundation-Model", "Extreme-Scale"], 
+                desc: "表格中的SOTA数据集。里程达4839.9km，时长1344小时，图像53.5M，场景3154个。支持轨迹与关节动作的联合训练。", 
+                highlight: "数据量呈现数量级跨越，是目前规模最大的导航基础模型训练数据集。", 
+                link: "https://github.com/intern-data/InternData-N1" 
+            },
 
             // --- MANIPULATION (Included Robotwin) ---
             { name: "Robotwin", cat: "man", is2025: true, year: 2025, tags: ["Digital Twin", "Sim-to-Real"], desc: "2025年发布的重磅基准。专注于利用高精度数字孪生对齐仿真与现实，涵盖数十类复杂家务任务。", highlight: "解决具身智能 Sim-to-Real 鸿沟。", link: "https://robotwin-benchmark.github.io/" },
