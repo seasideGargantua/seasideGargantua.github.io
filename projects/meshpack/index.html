@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="MeshPack: Towards High-Resolution Artistic Mesh Generation via Part-wise Autoregressive Modeling"/>
-    <title>MeshPack: High-Resolution Artistic Mesh Generation</title>
+    <meta name="description" content="MeshPack: Towards Artistic Mesh Generation via Part-wise Autoregressive Modeling"/>
+    <title>MeshPack: Towards Artistic Mesh Generation via Part-wise Autoregressive Modeling</title>
     
     <link href="css/bootstrap-4.4.1.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet" type="text/css">
@@ -185,6 +185,11 @@
             transition: transform 0.2s ease;
         }
         
+        #citationText {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
         pre:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
@@ -333,6 +338,7 @@
         @media (max-width: 768px) {
             h2 { font-size: 1.8rem; }
             .jumbotron { padding: 2rem 1rem; }
+            .col-12.mb-5 { margin-left: 0 !important; margin-right: 0 !important; }
             .btn { width: 100%; margin: 0.5rem 0; }
         }
     </style>
@@ -344,37 +350,39 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h2>MeshPack: Towards High-Resolution Artistic Mesh Generation via Part-wise Autoregressive Modeling</h2>
+                        <h2>MeshPack: Towards Artistic Mesh Generation via Part-wise Autoregressive Modeling</h2>
                         
                         <div style="margin-bottom: 1.5rem;">
-                            </div>
+                            Accepted Manuscript, 2026 &middot; Journal of Computer-Aided Design &amp; Computer Graphics (JCAD)
+                        </div>
 
                         <div class="author-list">
-                            <a href="https://seasidegargantua.xyz/">Qinglin Yang</a><sup>1,2</sup> &nbsp;&middot;&nbsp;
-                            <a>Xianze Fang</a><sup>2</sup> &nbsp;&middot;&nbsp;
-                            <a href="https://g-1nonly.github.io/">Jingnan Gao</a><sup>3,2</sup> &nbsp;&middot;&nbsp;
-                            <a href="https://scholar.google.com/citations?user=g5XimOcAAAAJ&hl=zh-CN">Jiangjing Lyu</a><sup>2</sup> &nbsp;&middot;&nbsp;
-                            <a href="https://daodaofr.github.io/">Yichao Yan</a><sup>3</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://seasidegargantua.xyz/">Qinglin Yang</a><sup>1,3</sup> &nbsp;&middot;&nbsp;
+                            <a>Xianze Fang</a><sup>3</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://g-1nonly.github.io/">Jingnan Gao</a><sup>2,3</sup> &nbsp;&middot;&nbsp;
+                            <span style="font-weight: 600; margin: 0 4px;">Yanhao Jia</span><sup>4</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://scholar.google.com/citations?user=g5XimOcAAAAJ&hl=zh-CN">Jiangjing Lyu</a><sup>3</sup> &nbsp;&middot;&nbsp;
+                            <a href="https://daodaofr.github.io/">Yichao Yan</a><sup>2</sup> &nbsp;&middot;&nbsp;
                             <a href="https://www.xzhou.me/">Xiaowei Zhou</a><sup>1</sup> &nbsp;&middot;&nbsp;
-                            <a href="https://www.xiajiazhi.com/">Jiazhi Xia</a><sup>4</sup> &nbsp;&middot;&nbsp;
-                            <a href="https://pengsida.net/">Sida Peng</a><sup>1</sup>
+                            <a href="https://pengsida.net/">Sida Peng</a><sup>1,*</sup>
                         </div>
                         
                         <p style="margin-top: 1rem; color: var(--dark-gray); font-size: 0.95rem;"> 
-                            <sup>1</sup>State Key Lab of CAD & CG, Zhejiang University &nbsp;&nbsp; 
-                            <sup>2</sup>Alibaba Group &nbsp;&nbsp; 
-                            <sup>3</sup>Shanghai Jiao Tong University  &nbsp;&nbsp;
-                            <sup>4</sup>Central South University
+                            <sup>1</sup>College of Computer Science and Technology, Zhejiang University &nbsp;&nbsp;
+                            <sup>2</sup>School of Artificial Intelligence, Shanghai Jiao Tong University &nbsp;&nbsp;
+                            <sup>3</sup>Taotian Group, Alibaba Group &nbsp;&nbsp;
+                            <sup>4</sup>College of Computer and Data Science, Nanyang Technological University, Singapore
+                            <br><sup>*</sup>Corresponding author
                         </p>
                         
                         <div class="row justify-content-center" style="margin-top: 2rem;">
                             <div class="column">
-                                <a class="btn btn-light" href="" role="button" target="_blank">
+                                <a class="btn btn-light" href="https://www.jcad.cn/article/doi/10.3724/SP.J.1089.2026-00123" role="button" target="_blank" rel="noopener">
                                     <i class="fas fa-file-pdf" style="margin-right: 8px;"></i> Paper
                                 </a>
                             </div>
                             <div class="column">
-                                <a class="btn btn-light" id="code" href="" role="button" target="_blank">
+                                <a class="btn btn-light" id="code" href="" role="button" target="_blank" rel="noopener">
                                     <i class="fab fa-github" style="margin-right: 8px;"></i> Code
                                 </a>
                             </div>
@@ -430,7 +438,7 @@
                 <div class="col-12 text-center">
                     <h3>Qualitative Comparison</h3>
                     <br>
-                    <img src="files/comparison.png" alt="comparison" class="img" style="border-radius: 8px;">
+                    <img src="files/comparison.png" alt="comparison" class="img img-fluid" style="border-radius: 8px;">
                 </div>
             </div>
         </div>
@@ -442,7 +450,7 @@
                 <div class="col-12 text-center">
                     <h3>More Results</h3>
                     <br>
-                    <img src="files/supp.png" alt="more results" class="img">
+                    <img src="files/supp.png" alt="more results" class="img img-fluid">
                 </div>
             </div>
         </div>
@@ -458,7 +466,15 @@
                             <i class="fas fa-copy"></i>
                             <span id="copyText">Copy</span>
                         </button>
-                        <pre id="citationText"><code></code></pre>
+                        <pre id="citationText"><code>@article{yang2026meshpack,
+  title = {Towards Artistic Mesh Generation via Part-wise Autoregressive Modeling},
+  author = {Yang, Qinglin and Fang, Xianze and Gao, Jingnan and Jia, Yanhao and
+            Lyu, Jiangjing and Yan, Yichao and Zhou, Xiaowei and Peng, Sida},
+  journal = {Journal of Computer-Aided Design &amp; Computer Graphics},
+  year = {2026},
+  doi = {10.3724/SP.J.1089.2026-00123},
+  note = {Accepted Manuscript}
+}</code></pre>
                     </div>
                 </div>
             </div>
@@ -469,8 +485,8 @@
         <div class="container">
             <hr>
             <p style="color: var(--dark-gray);">
-                Thanks to <a href="https://lioryariv.github.io/" target="_blank" style="color: var(--primary-color);">Lior Yariv</a> for the website template.<br>
-                &copy; 2025 <a href="https://github.com/zju3dv" target="_blank" style="color: var(--secondary-color); font-weight: 600;">ZJU3DV</a> Group
+                Thanks to <a href="https://lioryariv.github.io/" target="_blank" rel="noopener" style="color: var(--primary-color);">Lior Yariv</a> for the website template.<br>
+                &copy; 2025 <a href="https://github.com/zju3dv" target="_blank" rel="noopener" style="color: var(--secondary-color); font-weight: 600;">ZJU3DV</a> Group
             </p>
         </div>
     </footer>
