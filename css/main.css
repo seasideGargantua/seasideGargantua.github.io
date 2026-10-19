@@ -2917,6 +2917,7 @@ a:hover {
 }
 .profile-page {
   padding: 4px 0 10px;
+  text-align: left;
 }
 .profile-hero {
   display: grid;
