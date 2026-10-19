@@ -1,0 +1,82 @@
+{
+  "created": "2026-10-19",
+  "generation_method": "builtin imagegen",
+  "purpose": "Pixel-art affiliation icons for the About page",
+  "assets": [
+    {
+      "asset": "zju-pixel.png",
+      "institution": "Zhejiang University",
+      "method": "builtin imagegen",
+      "transformation": "Official emblem reference reinterpreted as a transparent pixel-art affiliation icon; tiny lettering and founding-year numerals omitted.",
+      "source_page": "https://www.zju.edu.cn/514/listm.htm",
+      "source_image_url": "https://www.zju.edu.cn/_upload/article/images/c3/98/1fb1d281492eb477a098ef7a2901/05966b26-ab45-470d-94c1-99b1e02d12f4.png",
+      "prompt": "Use case: style-transfer.\nAsset type: transparent pixel-art university affiliation icon for a personal academic website.\nInput image 1: official Zhejiang University emblem from the university website, used as the identity and color reference. Transform this emblem into one square pixel-art icon.\nSubject: Zhejiang University emblem: the distinctive centered Qiushi eagle with broad upward-spread wings and a tapered tiered body, inside its official circular seal. Keep this specific eagle silhouette recognizable. Use truth-seeking blue #003F88 and transparent negative space; a small amount of white within the emblem is allowed only where essential.\nStyle/medium: crisp handcrafted pixel art on a 64 by 64 logical pixel grid, enlarged as sharp square blocks. Consistent square pixel size, deliberate stair-step diagonals, limited flat palette. No smoothing, antialiasing, gradients, glows, shadows, texture, or 3D effects.\nComposition: square canvas, centered emblem occupying about 80 percent of both canvas dimensions, with equal transparent padding around the circular seal. Preserve the official circular border as part of the emblem, not an added frame. Replace the tiny illegible perimeter lettering and founding-year numerals with clean empty space; no text or glyph-like marks anywhere. The central eagle must dominate and stay faithful to the reference.\nBackground: genuinely transparent alpha, including all pixels outside the emblem. Do not draw a checkerboard or solid background.\nConstraints: only one Zhejiang University symbol, no labels, extra text, decorative frames, invented symbols, or unrelated objects.",
+      "transparent_background": true,
+      "asset_url": "/images/affiliations/zju-pixel.png"
+    },
+    {
+      "asset": "whu-pixel.png",
+      "institution": "Wuhan University",
+      "method": "builtin imagegen",
+      "transformation": "Official emblem reference reinterpreted as a transparent pixel-art affiliation icon; tiny lettering and founding-year numerals omitted.",
+      "source_page": "https://www.whu.edu.cn/xxgk/wdbs.htm",
+      "source_image_url": "https://www.whu.edu.cn/__local/E/EA/D6/D007F1FEAD3CBA8EE4667228D78_778EF543_153C9.png?e=.png",
+      "prompt": "Use case: style-transfer.\nAsset type: transparent pixel-art university affiliation icon for a personal academic website.\nInput image 1: official Wuhan University emblem from the university website, used as the identity and color reference. The emblem is centered in a wide source image; ignore the empty side margins and transform only the circular emblem into one square pixel-art icon.\nSubject: Wuhan University emblem: its distinctive old library building with a symmetrical Chinese tiered roof, roof ridge, central entrance and column facade in Luojia blue #002554, inside the official circular seal with Luojia green #115740 outer band. Preserve the recognizable roof and library silhouette, the official blue and green colors, and the circular seal proportions.\nStyle/medium: crisp handcrafted pixel art on a 64 by 64 logical pixel grid, enlarged as sharp square blocks. Consistent square pixel size, deliberate stair-step diagonals, limited flat palette using only blue, green, white where essential, and transparency. No smoothing, antialiasing, gradients, glows, shadows, texture, or 3D effects. Match a restrained classic university pixel-icon set.\nComposition: square canvas, centered emblem occupying about 80 percent of both canvas dimensions, with equal transparent padding around the circular seal. Preserve the official circle as part of the emblem, not an added frame. Omit all tiny perimeter lettering and founding-year numerals, leaving clean green or empty space instead; no text or glyph-like marks anywhere. Make the central library clearly readable at small size.\nBackground: genuinely transparent alpha, including all pixels outside the emblem. Do not draw a checkerboard or solid background.\nConstraints: only one Wuhan University symbol, no labels, extra text, decorative frames, invented symbols, or unrelated objects.",
+      "transparent_background": true,
+      "asset_url": "/images/affiliations/whu-pixel.png"
+    },
+    {
+      "company": "TeleAI",
+      "source_image_url": "https://www.teleai.com.cn/teleAI.ico",
+      "additional_official_logo_url": "https://cdn02.teleai.com.cn/ssr_static/img/head-logo.CLCS1sO7.svg",
+      "reference_preparation": "Official ICO decoded to PNG solely as an input format conversion.",
+      "prompt": "Create a SMALL, clean 2D pixel-art web icon. Transparent background. The whole mark must fit within the middle 80% of a square canvas, leaving completely empty transparent padding on all four sides. Use a 64x64 logical pixel grid enlarged with sharp square blocks. Every colored region is a single SOLID FLAT color. Absolutely NO gradients, glow, shading, texture, noise, dithering, soft edges, stray marks or decorative additions. Do not zoom the icon until it touches the edges. All pixels outside the symbol must be fully transparent. Use the attached official TeleAI logo as the identity reference. Preserve the blue shield shape with its pointed bottom, white orbit-globe, and short wordmark \"TeleAI\". Pixelate the original geometry using exactly three flat colors: dark blue shield, medium blue border, white orbit and white text. No other colors. Do not redesign the logo.",
+      "method": "builtin imagegen",
+      "transparent_background": true,
+      "asset": "teleai-pixel.png",
+      "postprocessing": "None; generated PNG copied byte-for-byte, preserving alpha.",
+      "attribution": "Logo identifies the institution in the author's professional experience. The pixel-art adaptation is unofficial.",
+      "asset_url": "/images/affiliations/teleai-pixel.png",
+      "source_page": "https://www.teleai.com.cn/"
+    },
+    {
+      "company": "Alibaba Group",
+      "source_image_url": "https://ali-home-data.oss-cn-hangzhou.aliyuncs.com/ecms-files/886024452/ae99cd49-2667-464e-b9db-b39cee0126e1.png",
+      "reference_preparation": "Original official English logo PNG used without alteration.",
+      "prompt": "Use case: style-transfer.\nAsset type: transparent affiliation icon for a personal academic website's Experience section.\nInput image 1: official Alibaba Group English logo, the edit target and identity reference.\nPrimary request: extract the recognizable orange stylized smiling human-face / lowercase-a emblem at the LEFT of the official logo and transform that exact emblem into a clean pixel-art icon. Omit the long Alibaba wordmark to the right. Preserve the emblem's distinctive face profile, eye, smile and sweeping a-shaped silhouette; do not invent a different symbol.\nStyle: draw on a 64 by 64 logical pixel grid, enlarged to a square canvas with crisp nearest-neighbor pixel edges and consistent square pixels. Limited palette, primarily the official saturated Alibaba orange. Preserve the orange geometry and transparent negative spaces.\nComposition: one centered emblem, occupying approximately 80% of the square canvas, generous transparent padding, entire emblem visible.\nBackground: genuinely transparent alpha, not white and not a drawn checkerboard.\nConstraints: recognizable official silhouette and colors; no added text, labels, decorative frames, gradients, smoothing, glow, shadows, 3D effects, texture, watermark, or extra objects.",
+      "method": "builtin imagegen",
+      "transparent_background": true,
+      "asset": "alibaba-pixel.png",
+      "postprocessing": "None; generated PNG copied byte-for-byte, preserving alpha.",
+      "attribution": "Source: www.alibabagroup.com. The logo identifies a former employer; the pixel-art adaptation is unofficial.",
+      "asset_url": "/images/affiliations/alibaba-pixel.png",
+      "source_page": "https://home.alibabagroup.com/en-US/resource-logos"
+    },
+    {
+      "created_date": "2026-10-19",
+      "method": "builtin imagegen",
+      "requested_style": "64x64 logical pixel grid enlarged with crisp nearest-neighbor-style pixels; limited official-color palette; centered symbol at approximately 80% of canvas; transparent background; no added labels, gradients, smoothing, glow or decorative frame.",
+      "asset": "lightwheel-pixel.png",
+      "organization": "Lightwheel",
+      "source_page": "https://www.lightwheel.ai/",
+      "additional_reference_image": "https://www.lightwheel.ai/assets/logo-white.png",
+      "prompt": "Use case: style-transfer. Create one clean transparent pixel-art company icon using the official Lightwheel reference image. Preserve its circular silhouette and the exact recognizable three-armed pale central shape and surrounding blue/violet regions. Render as a deliberately coarse 64x64 logical pixel-grid sprite enlarged with nearest-neighbor pixels. IMPORTANT: only SIX perfectly flat solid colors total: pale icy white for the central junction, sky blue, royal blue, deep navy, violet, light lavender. Each colored region must be a flat solid fill, with no gradient strips, no shading, no texture and no fine visual noise. Make bold stepped pixel edges. The circle must occupy exactly about 80% of the square canvas width, leaving a generous completely empty transparent margin on all four sides. Transparent alpha background. No letters, no words, no wordmark, no frame, no glow, no blur, no antialiasing, no shadows. The result should look like a compact retro game UI sprite of this company's official symbol.",
+      "notes": "Pixel-art interpretation of the official website favicon. Source files were viewed before generation. No manual image processing.",
+      "asset_url": "/images/affiliations/lightwheel-pixel.png",
+      "source_image_url": "https://www.lightwheel.ai/favicon.png"
+    },
+    {
+      "created_date": "2026-10-19",
+      "method": "builtin imagegen",
+      "requested_style": "64x64 logical pixel grid enlarged with crisp nearest-neighbor-style pixels; limited official-color palette; centered symbol at approximately 80% of canvas; transparent background; no added labels, gradients, smoothing, glow or decorative frame.",
+      "asset": "luojianet-pixel.png",
+      "organization": "WHULuoJiaTeam (LuoJiaNet Group)",
+      "source_page": "https://github.com/WHULuoJiaTeam",
+      "project_page": "https://github.com/WHULuoJiaTeam/luojianet",
+      "prompt": "Use case: style-transfer. Transform the reference image, the official WHULuoJiaTeam GitHub avatar, into one clean retro pixel-art icon. Keep the identical blue satellite-and-signal composition, orientation and silhouette: two diagonal rectangular solar panels on a narrow connector, small satellite body at center left, a dish at center right and three signal arcs at lower right. Use an exactly 64 by 64 logical square pixel grid enlarged uniformly to a square output. Every edge should follow bold clean pixel steps. Use exactly ONE solid flat official blue color #2486ED; every blue pixel must be fully opaque with no variation, shading or texture. All remaining pixels must be fully transparent. Use a genuinely transparent alpha background, not a white or colored background. No outline, no cyan border, no halos, no speckles or stray pixels, no gradients, no antialiasing, no blur, no glow, no text or labels or frames. The icon occupies 80% of the canvas width and height, centered with an empty transparent margin. Preserve recognizable official symbol geometry; simplify only the curves to pixel steps. A single compact flat-color game UI sprite.",
+      "notes": "Pixel-art interpretation of the official GitHub organization avatar (blue satellite and radio-signal symbol). This provenance does not assert registered trademark status or an independently published brand guideline. Source file viewed before generation. No manual image processing.",
+      "asset_url": "/images/affiliations/luojianet-pixel.png",
+      "source_image_url": "https://avatars.githubusercontent.com/u/106079293?s=200&v=4"
+    }
+  ]
+}
