@@ -2,22 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fcfcfa">
 <meta name="generator" content="Hexo 7.3.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/icon.png">
   <link rel="mask-icon" href="/images/icon.png" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/main.css?v=20261022">
+<link rel="stylesheet" href="/css/academic.css?v=20261022">
+<link rel="preload" href="/css/fonts/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/css/fonts/source-serif-4-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"seasidegargantua.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"seasidegargantua.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Ph.D. student at Zhejiang University exploring recursive self-improvement and the nature of intelligence.">
@@ -76,8 +79,9 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
+<body class="academic-site" id="top" itemscope itemtype="http://schema.org/WebPage">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="container">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -94,7 +98,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Qinglin Yang</h1>
+      <span class="site-title">Qinglin Yang</span>
       <span class="logo-line-after"><i></i></span>
     </a>
       <p class="site-subtitle" itemprop="description">Exploring Intelligence · Recursive Self-Improvement</p>
@@ -123,7 +127,7 @@
   </li>
         <li class="menu-item menu-item-writing">
 
-    <a href="/archives/" rel="section"><i class="fa fa-pen-nib fa-fw"></i>Writing</a>
+    <a href="/archives/" rel="section" aria-current="page"><i class="fa fa-pen-nib fa-fw"></i>Writing</a>
 
   </li>
   </ul>
@@ -142,7 +146,7 @@
   </div>
 
 
-    <main class="main">
+    <main class="main" id="main-content" tabindex="-1">
       <div class="main-inner">
         <div class="content-wrap">
           
@@ -249,7 +253,7 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Qinglin Yang"
+    <img class="site-author-image" itemprop="image" alt="Black hole illustration"
       src="/images/avatar.png">
   <p class="site-author-name" itemprop="name">Qinglin &ldquo;Quinn&rdquo; Yang</p>
   <div class="site-description" itemprop="description">Ph.D. student at Zhejiang University exploring recursive self-improvement and the nature of intelligence.</div>
@@ -280,29 +284,12 @@
 
     <footer class="footer">
       <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2026</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Qinglin Yang</span>
-</div>
-
-        
-
-
-
-
-
-
-
-
+        <span class="copyright">&copy; 2026 Qinglin Yang</span>
+        <div class="footer-links">
+          <a href="https://github.com/seasideGargantua" rel="noopener" target="_blank">GitHub</a>
+          <a href="mailto:yangqinglin@zju.edu.cn">Email</a>
+          <a href="/files/yangqinglin_cv.pdf?v=20261019">CV</a>
+        </div>
       </div>
     </footer>
   </div>
@@ -344,26 +331,7 @@
   
 
   
-<style>
-  .main,
-  .main-inner {
-    padding-bottom: 0 !important;
-  }
 
-  .footer {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    background: transparent !important;
-  }
-
-  .container {
-    min-height: 0 !important;
-  }
-</style>
 
 </body>
 </html>
