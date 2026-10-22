@@ -662,6 +662,7 @@ a:hover {
   --font-body: "Source Sans 3", "PingFang SC", "Microsoft YaHei", sans-serif;
   --muted: #60584e;
 }
+html { height: auto; min-height: 100%; }
 body { height: auto; min-height: 100vh; font-family: var(--font-body); color: var(--ink); }
 strong, b { font-family: inherit; font-size: inherit; font-weight: 700; }
 ::selection { background: #e9c39c; color: var(--ink); }
@@ -678,6 +679,7 @@ a { text-underline-offset: 3px; touch-action: manipulation; }
 .site-nav-toggle, .site-nav-right, .sidebar-toggle, .sidebar, #sidebar-dimmer, .back-to-top { display: none !important; }
 .content { padding-top: 0; }
 .content-wrap { padding: 0; }
+.main-inner { padding-bottom: 48px !important; }
 .post-body { font-family: var(--font-body); font-size: 17px; line-height: 1.75; text-align: left; }
 .home-summary, .home-map-panel p, .profile-page p { font-family: var(--font-body); }
 .home-role { margin: 16px 0 0; color: var(--forest); font-size: 17px; font-weight: 600; }
